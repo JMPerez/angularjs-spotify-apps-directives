@@ -71,7 +71,7 @@ To start with, include the AngularJS library. You can download AngularJS from [t
 
 Next we are going to implement the app initialization. In our case we want to add a picture of the cover for a track that includes a play button. For this we need to use an `Image` Spotify Apps Views component.
 
-```
+```javascript
   var app = angular.module('spotifyApp', ['sp-image-ng']);
 
   app.config(function($locationProvider, $compileProvider) {
@@ -119,11 +119,6 @@ The complete example:
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.min.js"></script>
     <script>
       var app = angular.module('spotifyApp', ['sp-image-ng']);
-
-      app.config(function($locationProvider, $compileProvider) {
-        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sp):/);  
-        $locationProvider.html5Mode(false);
-      });
 
       function ExampleCtrl($scope) {
         $scope.uri = 'spotify:track:22QqSpCXi5ZwTZzVV3yaUo';
