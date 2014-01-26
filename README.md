@@ -75,11 +75,6 @@ Next we are going to implement the app initialization. In our case we want to ad
 ```javascript
   var app = angular.module('spotifyApp', ['sp-image-ng']);
 
-  app.config(function($locationProvider, $compileProvider) {
-    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|sp):/);  
-    $locationProvider.html5Mode(false);
-  });
-
   function ExampleCtrl($scope) {
     $scope.uri = 'spotify:track:22QqSpCXi5ZwTZzVV3yaUo';
   }
