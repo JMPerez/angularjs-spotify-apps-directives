@@ -1,8 +1,9 @@
 #[AngularJS](http://angularjs.org/) Directives for [Spotify Apps](https://developer.spotify.com/technologies/apps/) [Views Framework](https://developer.spotify.com/docs/apps/views/1.0/)
 
-These repository contains a set of AngularJS diractives that act as wrappers for Spotify Apps Views Framework elements.
+This repository contains a set of AngularJS diractives that act as wrappers for Spotify Apps Views Framework elements.
 
 ```html
+<!-- Adding an Image for a Spotify URI, with player and size of 100x100 px -->
 <sp-image
 	uri="{{uri}}"
 	player
@@ -12,6 +13,7 @@ These repository contains a set of AngularJS diractives that act as wrappers for
 ```
 
 ```html
+<!-- Adding a List for the first 5 tracks of a certain playlist URI, with header and fields star, track, artist, and time -->
 <sp-list
 	uri="{{uri}}"
 	fields="star,track,artist,time"
@@ -21,7 +23,6 @@ These repository contains a set of AngularJS diractives that act as wrappers for
 ```
 
 ## How it works
-These directives make it easy to include Spotify Views components in your Spotify App.
 
 You can pass most of the available options using attributes, and they include a `watch` binding for the Spotify URI, so they update themselves every time there is a change in the URI.
 
