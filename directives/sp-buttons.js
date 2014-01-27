@@ -33,6 +33,9 @@ angular.module('sp-buttons-ng', [])
               if (newval === null && element.childNodes.length) {
                 element.removeChild(element.childNodes[0]);
               } else {
+                if (!attrs.uri) {
+                  return;
+                }
                 entity = models.fromURI(attrs.uri);
 
                 var options = {};
@@ -66,6 +69,54 @@ angular.module('sp-buttons-ng', [])
                   button = SubscribeButton.forPlaylist(entity, options);
                 } else if (entity instanceof models.Artist) {
                   button = SubscribeButton.forArtist(entity, options);
+                } else {
+                  console.error('Unrecognized entity', entity);
+                }
+
+                if (button !== null) {
+                  if (element.childNodes.length) {
+                    element.replaceChild(button.node, element.childNodes[0]);
+                  } else {
+                    element.appendChild(button.node);
+                  }
+                }
+              }
+            }
+          });
+        });
+      }
+    };
+  })
+
+.directive('spShareButton', function () {
+
+    return {
+      restrict: 'EA',
+      replace: true,
+      link: function ($scope, elements, attrs) {
+        var button,
+            element = elements[0],
+            entity = null;
+
+        attrs.$observe('uri', function (newval, oldval) {
+          require(['$views/buttons#ShareButton', '$api/models'], function (ShareButton, models) {
+            if (newval !== oldval) {
+              if (newval === null && element.childNodes.length) {
+                element.removeChild(element.childNodes[0]);
+              } else {
+                if (!attrs.uri) {
+                  return;
+                }
+                entity = models.fromURI(attrs.uri);
+
+                if (entity instanceof models.Album) {
+                  button = ShareButton.forAlbum(entity);
+                } else if (entity instanceof models.Track) {
+                  button = ShareButton.forTrack(entity);
+                } else if (entity instanceof models.Playlist) {
+                  button = ShareButton.forPlaylist(entity);
+                } else if (entity instanceof models.Artist) {
+                  button = ShareButton.forArtist(entity);
                 } else {
                   console.error('Unrecognized entity', entity);
                 }
