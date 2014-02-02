@@ -80,10 +80,10 @@ angular.module('sp-list-ng', [])
                 };
 
                 if (entity instanceof models.Playlist) {
-                  list = List.forPlaylist(entity);
+                  list = List.forPlaylist(entity, options);
                   injectList(list);
                 } else if (entity instanceof models.Album) {
-                  list = List.forAlbum(entity);
+                  list = List.forAlbum(entity, options);
                   injectList(list);
                 } else if (entity instanceof models.Track) {
                   (function(entity) {
