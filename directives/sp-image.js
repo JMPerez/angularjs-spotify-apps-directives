@@ -18,6 +18,7 @@ angular.module('sp-image-ng', [])
       style: types.string,
       player: types.boolean,
       quickActionMenu: types.boolean,
+      // overlay: types.array,
       link: types.string,
       animate: types.boolean,
       placeholder: types.string,
@@ -32,10 +33,13 @@ angular.module('sp-image-ng', [])
       replace: true,
       link: function ($scope, elements, attrs) {
         attrs.$observe('uri', function (newval, oldval) {
+          if (!attrs.uri) {
+            return;
+          }
           require(['$views/image#Image', '$api/models'], function (Image, models) {
+
             var image,
-                element = elements[0],
-                entity = null;
+                element = elements[0];
 
             if (newval !== oldval) {
               if (newval === null && element.childNodes.length) {
@@ -81,16 +85,12 @@ angular.module('sp-image-ng', [])
                     image = Image.forPlaylist(entity, options);
                   } else if (entity instanceof models.Track) {
                     image = Image.forTrack(entity, options);
-                  } else {
-                    console.error('Tried to create an Image for a wrong type', entity);
                   }
                 }
-                if (image !== null) {
-                  if (element.childNodes.length) {
-                    element.replaceChild(image.node, element.childNodes[0]);
-                  } else {
-                    element.appendChild(image.node);
-                  }
+                if (element.childNodes.length) {
+                  element.replaceChild(image.node, element.childNodes[0]);
+                } else {
+                  element.appendChild(image.node);
                 }
               }
             }

@@ -28,14 +28,14 @@ angular.module('sp-buttons-ng', [])
             entity = null;
 
         attrs.$observe('uri', function (newval, oldval) {
+          if (!attrs.uri) {
+            return;
+          }
           require(['$views/buttons#SubscribeButton', '$api/models'], function (SubscribeButton, models) {
             if (newval !== oldval) {
               if (newval === null && element.childNodes.length) {
                 element.removeChild(element.childNodes[0]);
               } else {
-                if (!attrs.uri) {
-                  return;
-                }
                 entity = models.fromURI(attrs.uri);
 
                 var options = {};
@@ -88,6 +88,43 @@ angular.module('sp-buttons-ng', [])
     };
   })
 
+.directive('spPlayButton', function () {
+
+    return {
+      restrict: 'EA',
+      replace: true,
+      link: function ($scope, elements, attrs) {
+        var button,
+            element = elements[0],
+            entity = null;
+
+        attrs.$observe('uri', function (newval, oldval) {
+          if (!attrs.uri) {
+            return;
+          }
+          require(['$views/buttons#PlayButton', '$api/models'], function (PlayButton, models) {
+            if (newval !== oldval) {
+              if (newval === null && element.childNodes.length) {
+                element.removeChild(element.childNodes[0]);
+              } else {
+                entity = models.fromURI(attrs.uri);
+                button = PlayButton.forItem(entity);
+
+                if (button !== null) {
+                  if (element.childNodes.length) {
+                    element.replaceChild(button.node, element.childNodes[0]);
+                  } else {
+                    element.appendChild(button.node);
+                  }
+                }
+              }
+            }
+          });
+        });
+      }
+    };
+  })
+
 .directive('spShareButton', function () {
 
     return {
@@ -99,14 +136,14 @@ angular.module('sp-buttons-ng', [])
             entity = null;
 
         attrs.$observe('uri', function (newval, oldval) {
+          if (!attrs.uri) {
+            return;
+          }
           require(['$views/buttons#ShareButton', '$api/models'], function (ShareButton, models) {
             if (newval !== oldval) {
               if (newval === null && element.childNodes.length) {
                 element.removeChild(element.childNodes[0]);
               } else {
-                if (!attrs.uri) {
-                  return;
-                }
                 entity = models.fromURI(attrs.uri);
 
                 if (entity instanceof models.Album) {
@@ -117,6 +154,54 @@ angular.module('sp-buttons-ng', [])
                   button = ShareButton.forPlaylist(entity);
                 } else if (entity instanceof models.Artist) {
                   button = ShareButton.forArtist(entity);
+                } else {
+                  console.error('Unrecognized entity', entity);
+                }
+
+                if (button !== null) {
+                  if (element.childNodes.length) {
+                    element.replaceChild(button.node, element.childNodes[0]);
+                  } else {
+                    element.appendChild(button.node);
+                  }
+                }
+              }
+            }
+          });
+        });
+      }
+    };
+  })
+
+  .directive('spStartRadioButton', function () {
+
+    return {
+      restrict: 'EA',
+      replace: true,
+      link: function ($scope, elements, attrs) {
+        var button,
+            element = elements[0],
+            entity = null;
+
+        attrs.$observe('uri', function (newval, oldval) {
+          if (!attrs.uri) {
+            return;
+          }
+          require(['$views/buttons#StartRadioButton', '$api/models'], function (StartRadioButton, models) {
+            if (newval !== oldval) {
+              if (newval === null && element.childNodes.length) {
+                element.removeChild(element.childNodes[0]);
+              } else {
+                entity = models.fromURI(attrs.uri);
+
+                if (entity instanceof models.Album) {
+                  button = StartRadioButton.forAlbum(entity);
+                } else if (entity instanceof models.Track) {
+                  button = StartRadioButton.forTrack(entity);
+                } else if (entity instanceof models.Playlist) {
+                  button = StartRadioButton.forPlaylist(entity);
+                } else if (entity instanceof models.Artist) {
+                  button = StartRadioButton.forArtist(entity);
                 } else {
                   console.error('Unrecognized entity', entity);
                 }

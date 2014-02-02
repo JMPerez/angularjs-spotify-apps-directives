@@ -35,6 +35,9 @@ angular.module('sp-list-ng', [])
             element = elements[0];
 
         attrs.$observe('uri', function (newval, oldval) {
+          if (!attrs.uri) {
+            return;
+          }
           require(['$views/list#List', '$api/models'], function (List, models) {
             if (newval !== oldval) {
               if (newval === null && element.childNodes.length) {
