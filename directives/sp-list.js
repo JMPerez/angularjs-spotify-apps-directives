@@ -43,7 +43,7 @@ angular.module('sp-list-ng', [])
               if (newval === null && element.childNodes.length) {
                 element.removeChild(element.childNodes[0]);
               } else {
-                playlist = models.Playlist.fromURI(attrs.uri);
+                entity = models.fromURI(attrs.uri);
 
                 var options = {};
 
@@ -70,13 +70,37 @@ angular.module('sp-list-ng', [])
                   }
                 }
 
-                list = List.forPlaylist(playlist, options);
-                if (element.childNodes.length) {
-                  element.replaceChild(list.node, element.childNodes[0]);
+                var injectList = function(list) {
+                  if (element.childNodes.length) {
+                    element.replaceChild(list.node, element.childNodes[0]);
+                  } else {
+                    element.appendChild(list.node);
+                  }
+                  list.init();
+                };
+
+                if (entity instanceof models.Playlist) {
+                  list = List.forPlaylist(entity);
+                  injectList(list);
+                } else if (entity instanceof models.Album) {
+                  list = List.forAlbum(entity);
+                  injectList(list);
+                } else if (entity instanceof models.Track) {
+                  (function(entity) {
+                    models.Playlist
+                      .createTemporary('tmp_' + attrs.uri + '_' + Math.random())
+                      .done(function (playlist) {
+                        playlist.load('tracks').done(function () {
+                          playlist.tracks.add(entity).done(function () {
+                            list = List.forCollection(playlist, options);
+                            injectList(list);
+                          });
+                        });
+                      });
+                  })(entity);
                 } else {
-                  element.appendChild(list.node);
+                  console.error('Unrecognized entity', entity);
                 }
-                list.init();
               }
             }
           });
